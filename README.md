@@ -1,7 +1,8 @@
 # a-bit-racey
 You may get this game by downloading this zip-file at the top right corner of path "a-bit-racey".
+You may press the python file "a bit racey" to run the game.
+
 This game's objective is to achieve as high a highscore that can be by dodging blocks in coming in your way. 
-There are screens that can enhance the gameplay.
 
 There is the shop, where you can buy buffs and nerves using coins earned in-game to help you get higher highscores
 The music loader allows you to choose from 3 different songs/music
