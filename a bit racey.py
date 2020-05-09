@@ -69,6 +69,11 @@ def total_score(count):
     text_s = font_s.render("Score: " + str(count), True, black)
     gameDisplay.blit(text_s, (0,0))
 
+def total_score2(count):
+    font_s = pygame.font.SysFont(None, 25)
+    text_s = font_s.render("Score: " + str(count), True, black)
+    gameDisplay.blit(text_s, (405,0))
+
 def high_score(count):
     font_h = pygame.font.SysFont(None, 25)
     text_h = font_h.render("High_Score: " + str(count), True, black)
@@ -166,6 +171,7 @@ def game_intro():
         gameDisplay.blit(intro_img2,(50,100))
 
         button("GO!",150,450,100,50,green,bright_green,game_loop)
+        button("multi",150,550,100,50,green,bright_green,multiplayer)
         button("QUIT",550,450,100,50,red,bright_red,quitgame)
         button("Music",350,400,100,50,yellow,bright_yellow,music)
         button("Shop",350,500,100,50,blue,bright_blue,shop)
@@ -636,7 +642,110 @@ def game_loop():
         pygame.display.update()
         clock.tick(60)
 
+def multiplayer():
+    global pause
+    global speed
+
+    score1 = 0
+    score2 = 0
+    
+    pygame.mixer.music.play(-1)
+    
+    x = (display_width * 0.45)
+    y = (display_height * 0.8)
+
+    x_change = 0
+
+    thing_startx = random.randrange(0, display_width)
+    thing_starty = -600
+    thing_speed = 7
+    thing_width = 100
+    thing_height = 100
+
+    print_max_speed = True
+
+    gameExit = False
+
+    while not gameExit:
+
+##        if score > h_score:
+##            h_score = score
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                gameExit = True
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_p:
+                    pause = True
+                    paused()
+                if event.key == pygame.K_ESCAPE:
+                    pygame.mixer.music.pause()
+                    game_intro()
+                        
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                    x_change = 0 
+
+        keys_pressed = pygame.key.get_pressed()
+        if keys_pressed[pygame.K_LEFT]:
+            x_change = -speed
+        if keys_pressed[pygame.K_RIGHT]:
+            x_change = speed
+        
+        x += x_change   
+                
+        gameDisplay.fill(white)
+        pygame.draw.rect(gameDisplay, black, (400,0,5,600))
+
+        things(thing_startx, thing_starty, thing_width, thing_height, block_color)
+        thing_starty += thing_speed
+        
+        car(x,y)
+        total_score(score1)
+        total_score2(score2)
+        high_score(h_score)
+
+        if x > display_width - car_width or x < 0:
+            crash()
+            score1 = 0
+            score2 = 0
+            speed = 5
+
+        if thing_starty > display_height:
+            thing_starty = 0 - thing_height
+            thing_startx = random.randrange(0, display_width)
+            score1 += 1
+            score2 += 1
+            
+            if thing_speed < 17:
+                thing_speed += 1
+            if thing_width < 125:
+                thing_width += (score1 * 1.2)
+                
+            if speed < 11:
+                speed = (speed * 1.1)
+            if speed > 11:
+                speed = 11
+            if speed == 11:
+                if print_max_speed == True:
+                    print("MAXIMUM SPEED REACHED")
+                    print_max_speed = False
+        
+        if y < thing_starty + thing_height:
+            if x > thing_startx and x < thing_startx + thing_width or x + car_width > thing_startx and x + car_width < thing_startx + thing_width:
+                if lives == 1:
+                    speed = 5
+                    score1 = 0
+                    score2 = 0
+                    crash()
+                      
+        pygame.display.update()
+        clock.tick(60)
+        
+
 game_intro()
-game_loop()
+#game_loop()
+multiplayer()
 pygame.quit()
 quit()
