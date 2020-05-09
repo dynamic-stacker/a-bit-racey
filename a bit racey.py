@@ -118,6 +118,9 @@ def gems_falling(gemx, gemy, gemw, gem_color):
 def car(x,y):
     gameDisplay.blit(carImg,(x,y))
 
+def car2(x,y):
+    gameDisplay.blit(carImg,(x,y))
+
 #messages, buttons
 def text_objects(text, font):
     textSurface = font.render(text, True, black)
@@ -648,11 +651,15 @@ def multiplayer():
 
     score1 = 0
     score2 = 0
+
+    mid_line = 400
     
     pygame.mixer.music.play(-1)
     
-    x = (display_width * 0.45)
+    x1 = (display_width * 0.45)
+    x2 = (display_width * 0.45)
     y = (display_height * 0.8)
+
 
     x_change = 0
 
@@ -693,15 +700,17 @@ def multiplayer():
         if keys_pressed[pygame.K_RIGHT]:
             x_change = speed
         
-        x += x_change   
-                
+        x1 += x_change   
+        x2 += x_change   
+      
         gameDisplay.fill(white)
-        pygame.draw.rect(gameDisplay, black, (400,0,5,600))
+        pygame.draw.rect(gameDisplay, black, (mid_line,0,5,600))
 
         things(thing_startx, thing_starty, thing_width, thing_height, block_color)
         thing_starty += thing_speed
         
-        car(x,y)
+        car(x1,y)
+        car2(x2,y)
         total_score(score1)
         total_score2(score2)
         high_score(h_score)
@@ -733,16 +742,21 @@ def multiplayer():
                     print_max_speed = False
         
         if y < thing_starty + thing_height:
-            if x > thing_startx and x < thing_startx + thing_width or x + car_width > thing_startx and x + car_width < thing_startx + thing_width:
+            if x1 > thing_startx and x1 < thing_startx + thing_width or x1 + car_width > thing_startx and x1 + car_width < thing_startx + thing_width:
                 if lives == 1:
                     speed = 5
                     score1 = 0
+                    crash()
+                    
+        if y < thing_starty + thing_height:
+            if x2 > thing_startx and x2 < thing_startx + thing_width or x2 + car_width > thing_startx and x2 + car_width < thing_startx + thing_width:
+                if lives == 1:
+                    speed = 5
                     score2 = 0
                     crash()
                       
         pygame.display.update()
         clock.tick(60)
-        
 
 game_intro()
 #game_loop()
