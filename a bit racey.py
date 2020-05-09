@@ -548,10 +548,6 @@ def game_loop():
                 gameExit = True
 
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    x_change = -speed
-                if event.key == pygame.K_RIGHT:
-                    x_change = speed
                 if event.key == pygame.K_p:
                     pause = True
                     paused()
@@ -563,6 +559,12 @@ def game_loop():
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                     x_change = 0 
 
+        keys_pressed = pygame.key.get_pressed()
+        if keys_pressed[pygame.K_LEFT]:
+            x_change = -speed
+        if keys_pressed[pygame.K_RIGHT]:
+            x_change = speed
+        
         x += x_change   
                 
         gameDisplay.fill(white)
