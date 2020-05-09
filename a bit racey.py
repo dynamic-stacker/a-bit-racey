@@ -8,6 +8,7 @@ coins_drop = pygame.mixer.Sound("coins_drop.wav")
 pygame.mixer.music.load("Drag_Race.wav")
 
 display_width = 800
+
 display_height = 600
 
 black = (0,0,0)
@@ -177,12 +178,41 @@ def game_intro():
         gameDisplay.blit(intro_img2,(50,100))
 
         button("GO!",150,450,100,50,green,bright_green,game_loop)
-        button("multi",150,550,100,50,green,bright_green,multiplayer)
+        button("Modes",150,500,100,50,green,bright_green,modes)
         button("QUIT",550,450,100,50,red,bright_red,quitgame)
         button("Music",350,400,100,50,yellow,bright_yellow,music)
         button("Shop",350,500,100,50,blue,bright_blue,shop)
         button("Garage",350,150,100,50,purple,bright_purple,vehicles)
         button("Description",10,10,150,50,bright_grey,dark_grey,description)
+
+        pygame.display.update()
+        clock.tick(15)
+
+def modes():
+    gameDisplay.fill(white)
+    
+    largeText = pygame.font.Font('freesansbold.ttf',115)
+    mediumText = pygame.font.Font('freesansbold.ttf',80)
+    TextSurf, TextRect = text_objects("Game modes", mediumText)
+    TextRect.center = ((display_width/2),(display_height/2))
+    gameDisplay.blit(TextSurf, TextRect)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+        #gameDisplay.fill(white)
+
+        #button(msg,x,y,w,h,ic,ac,action=None)
+        button("Normal",150,450,100,50,green,bright_green,game_loop)
+        button("QUIT",550,450,100,50,red,bright_red,quitgame)
+        button("Shop",350,380,100,50,blue,bright_blue,shop)
+        button("Music",350,450,100,50,yellow,bright_yellow,music)
+        button("Garage",350,520,100,50,purple,bright_purple,vehicles)
+        
+        button("Multiplayer",150,200,125,50,green,bright_green,multiplayer)
 
         pygame.display.update()
         clock.tick(15)
@@ -238,8 +268,8 @@ def crash(car_id, play_mode):
                 quit()
 
         #gameDisplay.fill(white)
-        button("Play Again",150,450,105,50,green,bright_green,game_loop)
-        button("multi",150,550,100,50,green,bright_green,multiplayer)
+        button("Normal",150,450,105,50,green,bright_green,game_loop)
+        button("Modes",150,500,105,50,green,bright_green,modes)
         button("QUIT",550,450,100,50,red,bright_red,quitgame)
         button("Music",350,400,100,50,yellow,bright_yellow,music)
         button("Shop",350,500,100,50,blue,bright_blue,shop)
@@ -294,7 +324,8 @@ def music():
         #gameDisplay.fill(white)
 
         #button(msg,x,y,w,h,ic,ac,action=None)
-        button("Continue",150,450,100,50,green,bright_green,game_loop)
+        button("Normal",150,450,100,50,green,bright_green,game_loop)
+        button("Modes",150,500,100,50,green,bright_green,modes)
         button("QUIT",550,450,100,50,red,bright_red,quitgame)
         button("Shop",350,400,100,50,blue,bright_blue,shop)
         button("Garage",350,500,100,50,purple,bright_purple,vehicles)
@@ -334,7 +365,8 @@ def shop():
         TextRect.center = ((display_width/2),(display_height/2))
         gameDisplay.blit(TextSurf, TextRect)
 
-        button("Continue",150,450,100,50,green,bright_green,game_loop)
+        button("Normal",150,450,100,50,green,bright_green,game_loop)
+        button("Modes",150,500,100,50,green,bright_green,modes)
         button("QUIT",550,450,100,50,red,bright_red,quitgame)
         button("Music",350,400,100,50,yellow,bright_yellow,music)
         button("Garage",350,500,100,50,purple,bright_purple,vehicles)
@@ -424,7 +456,8 @@ def vehicles():
         gameDisplay.blit(TextSurf, TextRect)
 
         #button(msg,x,y,w,h,ic,ac,action=None)
-        button("Continue",150,450,100,50,green,bright_green,game_loop)
+        button("Normal",150,450,100,50,green,bright_green,game_loop)
+        button("Modes",150,500,100,50,green,bright_green,modes)
         button("QUIT",550,450,100,50,red,bright_red,quitgame)
         button("Shop",350,400,100,50,blue,bright_blue,shop)
         button("Music",350,500,100,50,yellow,bright_yellow,music)
@@ -502,6 +535,7 @@ def paused():
 
         #gameDisplay.fill(white)
         button("GO!",150,450,100,50,green,bright_green,game_loop)
+        button("Modes",150,500,100,50,green,bright_green,modes)
         button("QUIT",550,450,100,50,red,bright_red,quitgame)
         button("Music",350,400,100,50,yellow,bright_yellow,music)
         button("Shop",350,500,100,50,blue,bright_blue,shop)
@@ -642,7 +676,7 @@ def game_loop():
                     s_buff = 0
                     speed = 5
                     score = 0
-                    crash()
+                    crash(1, "single_player")
                     
                 if lives > 1:
                    survived()
@@ -729,25 +763,28 @@ def multiplayer():
         
         car(x1,y1)
         car2(x2,y2)
+
         total_score(score1)
         total_score2(score2)
 
         if x1 > mid_line - car_width or x1 < 0:
-            crash()
+            crash(2, "multiplayer")
             score1 = 0
             score2 = 0
             speed = 5
 
         if x2 > display_width - car_width or x2 < mid_line :
-            crash()
+            crash(1, "multiplayer")
             score1 = 0
             score2 = 0
             speed = 5
 
         if thing_starty > display_height:
             thing_starty = 0 - thing_height
-            print(mid_line)
-            print(thing_width)
+            print(mid_line)
+
+            print(thing_width)
+
             print(mid_line - thing_width)
 
             thing_startx = random.randrange(0, round(mid_line - thing_width))
