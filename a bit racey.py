@@ -564,6 +564,8 @@ def game_loop():
     global score
     global h_score
 
+    global car_width
+
     global s_buff
     global s_nerf
     global nerf
@@ -682,7 +684,7 @@ def game_loop():
                    survived()
 
         if y < gem_starty + gem_height:
-            if x > gem_startx and x < gem_startx + gem_width or x + car_width > gem_startx and x + car_width < gem_startx + gem_width:
+            if gem_startx > x and gem_startx < x + car_width or gem_startx < x + car_width and x + car_width < gem_startx + gem_width:
                 gems += 1
                 gem_startx = random.randrange(0, display_width)
                 gem_starty = -10000
@@ -792,9 +794,9 @@ def multiplayer():
             score1 += 1
             score2 += 1
             
-            if thing_speed < 17:
+            if thing_speed < 15:
                 thing_speed += 1
-            if thing_width < 125:
+            if thing_width < 110:
                 thing_width += (score1 * 1.2)
                 
             if speed < 11:
