@@ -638,10 +638,10 @@ def game_loop():
         high_score(h_score)
 
         if x > display_width - car_width or x < 0:
-            crash(1, "single_player")
             score = 0
             speed = 5
             s_buff = 0
+            crash(1, "single_player")
 
         if thing_starty > display_height:
             thing_starty = 0 - thing_height
