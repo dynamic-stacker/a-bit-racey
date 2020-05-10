@@ -739,19 +739,19 @@ def multiplayer():
                         
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
-                    x1_change = 0
+                    x2_change = 0
                 if event.key == pygame.K_a or event.key == pygame.K_d:
-                    x2_change = 0 
+                    x1_change = 0 
 
         keys_pressed = pygame.key.get_pressed()
         if keys_pressed[pygame.K_LEFT]:
-            x1_change = -speed
-        if keys_pressed[pygame.K_RIGHT]:
-            x1_change = speed
-        if keys_pressed[pygame.K_a]:
             x2_change = -speed
-        if keys_pressed[pygame.K_d]:
+        if keys_pressed[pygame.K_RIGHT]:
             x2_change = speed
+        if keys_pressed[pygame.K_a]:
+            x1_change = -speed
+        if keys_pressed[pygame.K_d]:
+            x1_change = speed
         
         x1 += x1_change   
         x2 += x2_change   
@@ -770,16 +770,16 @@ def multiplayer():
         total_score2(score2)
 
         if x1 > mid_line - car_width or x1 < 0:
-            crash(2, "multiplayer")
             score1 = 0
             score2 = 0
             speed = 5
+            crash(2, "multiplayer")
 
         if x2 > display_width - car_width or x2 < mid_line :
-            crash(1, "multiplayer")
             score1 = 0
             score2 = 0
             speed = 5
+            crash(1, "multiplayer")
 
         if thing_starty > display_height:
             thing_starty = 0 - thing_height
