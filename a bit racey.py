@@ -352,7 +352,7 @@ def play_Country():
 
 def shop():
     shop = True
-
+    
     while shop:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -374,14 +374,17 @@ def shop():
         button("Buy lives",150,150,120,50,blue,bright_blue,add_lives)
         button("Speed buff",350,150,120,50,blue,bright_blue,speed_buff)
         button("Slow blocks",550,150,120,50,blue,bright_blue,speed_nerf)
+        button("Buy coins",350,60,120,50,blue,bright_blue,buy_coins)
 
         font = pygame.font.SysFont(None, 25)
         text = font.render("30 coins ", True, black)
         text2 = font.render("20 coins ", True, black)
         text3 = font.render("25 coins ", True, black)
+        text4 = font.render("5 gems ", True, black)
         gameDisplay.blit(text, (175,125))
         gameDisplay.blit(text2, (375,125))
         gameDisplay.blit(text3, (575,125))
+        gameDisplay.blit(text4, (575,125))
 
         coins_earned(coins)
         gems_collected(gems)
@@ -435,6 +438,18 @@ def speed_nerf():
     else:
         print("you do not have enough coins!")
 
+def buy_coins():
+    global gems
+    global coins
+
+    if gems >= 5:
+        pygame.mixer.Sound.play(coins_drop)
+        coins += 20
+        print("you bought 20 coins")
+        print("-5 gems")
+        gems -= 5
+    else:
+        print("you do not have enough gems!")
 
 def vehicles():
     global unlock
