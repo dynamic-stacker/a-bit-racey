@@ -4,20 +4,24 @@ conn = sqlite3.connect('database.db')
 
 c = conn.cursor()
 
-##c.execute("""CREATE TABLE stats
-##             (name text, coins integer, gems integer, highscore integer)""")
+c.execute("""CREATE TABLE player_id
+             (id integer, playername text, coins integer, gems integer, highscore integer)""")
 
-##first_3_attempts = [('James', '42', '2', '35'),
-##                    ('Edwards', '34', '6', '23'),
-##                    ('Jayden', '88', '4', '78')
+c.execute("""CREATE TABLE vehicle_id
+             (id integer, vehiclename text)""")
+
+
+##first_3_attempts = [('1', 'James', '42', '2', '35'),
+##                    ('2', 'Edwards', '34', '6', '23'),
+##                    ('3', 'Jayden', '88', '4', '78')
 ##                    ]
 ##
-##c.executemany('INSERT INTO stats VALUES (?,?,?,?)', first_3_attempts)
-
+##c.executemany('INSERT INTO player_id VALUES (?,?,?,?,?)', first_3_attempts)
+##
 def deleteRecord():
     try:
         # Deleting single record now
-        sql_delete_person = """DELETE FROM stats WHERE name = 'Edwards'"""
+        sql_delete_person = """DELETE FROM player_id WHERE id = 1"""
         c.execute(sql_delete_person)
         conn.commit()
         print("Player record deleted successfully ")
