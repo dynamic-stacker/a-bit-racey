@@ -2,6 +2,8 @@ import pygame
 import time
 import random
 
+from db import Database
+
 pygame.init()
 crash_sound = pygame.mixer.Sound("Crash.wav")
 coins_drop = pygame.mixer.Sound("coins_drop.wav")
@@ -249,6 +251,9 @@ def crash(car_id, play_mode):
     pygame.mixer.Sound.play(crash_sound)
 
     if play_mode == 'single_player':
+        # Update database highscore, similar hard coding this part
+        db.update_highscore(1, h_score)
+
         largeText = pygame.font.Font('freesansbold.ttf',115)
         TextSurf, TextRect = text_objects("Crashed", largeText)
         TextRect.center = ((display_width/2),(display_height/2))
@@ -401,7 +406,8 @@ def speed_buff():
         s_buff += 3
         print("you bought speed buff")
         print("-20 coins")
-        coins -= 20        
+        coins -= 20
+        db.update_coins(1, coins)
     else:
         print("you do not have enough coins!")
 
@@ -415,6 +421,7 @@ def add_lives():
         print("you bought 1 live")
         print("-30 coins")
         coins -= 30
+        db.update_coins(1, coins)
     else:
         print("you do not have enough coins!")
 
@@ -433,6 +440,7 @@ def speed_nerf():
             print("-25 coins")
             nerf = True
             bought_s_nerf = True
+            db.update_coins(1, coins)
         else:
             print("you bought it already!")
     else:
@@ -448,6 +456,9 @@ def buy_coins():
         print("you bought 20 coins")
         print("-5 gems")
         gems -= 5
+        db.update_coins(1, coins)
+        db.update_gems(1, gems)
+        
     else:
         print("you do not have enough gems!")
 
@@ -526,6 +537,7 @@ def unlock_skin():
             unlock = True
             gems -= 5
             print("you unlocked the helicopter!")
+            db.update_gems(1, gems)
         else:
             print("you need 5 gems!")
 
@@ -578,6 +590,15 @@ def game_loop():
     global lives
     global score
     global h_score
+
+    h_score = db.get_highscore(1);
+    print ("Current highscore:" + str(h_score))
+
+    coins = db.get_coins(1);
+    print("Coins:" + str(coins))
+
+    gems = db.get_gems(1);
+    print ("Gems:" + str(gems))
 
     global car_width
 
@@ -663,6 +684,7 @@ def game_loop():
             thing_startx = random.randrange(0, display_width)
             score += 1
             coins += 1
+            db.update_coins(1, coins)
             
             if thing_speed < 17:
                 thing_speed += 1
@@ -703,6 +725,7 @@ def game_loop():
                 gems += 1
                 gem_startx = random.randrange(0, display_width)
                 gem_starty = -10000
+                db.update_gems(1, gems)
                       
         pygame.display.update()
         clock.tick(60)
@@ -841,8 +864,15 @@ def multiplayer():
         pygame.display.update()
         clock.tick(60)
 
+# Database setup
+db = Database()
+
+# Prefer to put into a main() function
+# But it works for now
+db.setup()
+
 game_intro()
-#game_loop()
+game_loop()
 multiplayer()
 pygame.quit()
 quit()
