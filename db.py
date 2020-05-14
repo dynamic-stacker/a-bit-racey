@@ -64,13 +64,13 @@ class Database:
         self.cursor.execute(stmt, args)
         self.conn.commit()
 
-    def unlock_vehicle(player_id, vehicle_id):
+    def unlock_vehicle(self, player_id, vehicle_id):
         stmt = "UPDATE Player_Vehicle SET vehicle_id = ? WHERE player_id = ? "
         args = (vehicle_id, player_id, )
         self.cursor.execute(stmt, args)
         self.conn.commit()
 
-    def is_vehicle_unlocked(player_id, vehicle_id):
+    def is_vehicle_unlocked(self, player_id, vehicle_id):
         stmt = "SELECT * FROM Player_Vehicle WHERE vehicle_ID = ? AND player_id = ? "
         args = (vehicle_id, player_id, )
         self.cursor.execute(stmt, args)

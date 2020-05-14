@@ -4,6 +4,13 @@ import random
 
 from db import Database
 
+# Database setup
+db = Database()
+
+# Prefer to put into a main() function
+# But it works for now
+db.setup()
+
 pygame.init()
 crash_sound = pygame.mixer.Sound("Crash.wav")
 coins_drop = pygame.mixer.Sound("coins_drop.wav")
@@ -39,11 +46,13 @@ gem_color = (18,188,48)
 
 car_width = 73
 
-coins = 0
-gems = 0
+coins = db.get_coins(1);
+gems = db.get_gems(1);
 score = 0
-h_score = 0
+h_score = db.get_highscore(1);
 lives = 1
+
+gems += 5
 
 speed = 5
 s_buff = 0
@@ -51,7 +60,7 @@ s_nerf = 1
 bought_s_nerf = False
 nerf = False
 
-unlock = False
+unlock = db.is_vehicle_unlocked(1, 4)
 
 gameDisplay = pygame.display.set_mode((display_width,display_height))
 pygame.display.set_caption('A bit Racey')
@@ -389,7 +398,7 @@ def shop():
         gameDisplay.blit(text, (175,125))
         gameDisplay.blit(text2, (375,125))
         gameDisplay.blit(text3, (575,125))
-        gameDisplay.blit(text4, (575,125))
+        gameDisplay.blit(text4, (375,35))
 
         coins_earned(coins)
         gems_collected(gems)
@@ -525,6 +534,7 @@ def helicopter():
     if unlock == True:
         carImg = pygame.image.load('helicopter.png')
         print("you chose helicopter")
+        db.unlock_vehicle(1, 4)
     else:
         print("you need to unlock this skin!")
     
@@ -590,14 +600,9 @@ def game_loop():
     global lives
     global score
     global h_score
-
-    h_score = db.get_highscore(1);
+    
     print ("Current highscore:" + str(h_score))
-
-    coins = db.get_coins(1);
     print("Coins:" + str(coins))
-
-    gems = db.get_gems(1);
     print ("Gems:" + str(gems))
 
     global car_width
@@ -863,13 +868,6 @@ def multiplayer():
                       
         pygame.display.update()
         clock.tick(60)
-
-# Database setup
-db = Database()
-
-# Prefer to put into a main() function
-# But it works for now
-db.setup()
 
 game_intro()
 game_loop()
