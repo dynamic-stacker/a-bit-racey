@@ -65,7 +65,7 @@ class Database:
         self.conn.commit()
 
     def unlock_vehicle(self, player_id, vehicle_id):
-        stmt = "UPDATE Player_Vehicle SET vehicle_id = ? WHERE player_id = ? "
+        stmt = "INSERT INTO Player_Vehicle (vehicle_id, player_id) VALUES(?, ?);"
         args = (vehicle_id, player_id, )
         self.cursor.execute(stmt, args)
         self.conn.commit()
@@ -74,8 +74,8 @@ class Database:
         stmt = "SELECT * FROM Player_Vehicle WHERE vehicle_ID = ? AND player_id = ? "
         args = (vehicle_id, player_id, )
         self.cursor.execute(stmt, args)
-        list = self.cursor.fetchall()
-        if len(list) == 0:
+        my_list = self.cursor.fetchall()
+        if len(my_list) == 0:
             return False
         else:
             return True

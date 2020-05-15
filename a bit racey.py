@@ -1,6 +1,7 @@
 import pygame
 import time
 import random
+from bumper import *
 
 from db import Database
 
@@ -51,8 +52,7 @@ gems = db.get_gems(1);
 score = 0
 h_score = db.get_highscore(1);
 lives = 1
-
-gems += 5
+gems+=5
 
 speed = 5
 s_buff = 0
@@ -501,6 +501,7 @@ def vehicles():
         button("Racecar 2",350,200,100,50,purple,bright_purple,racecar2)
         button("Racecar 3",550,200,100,50,purple,bright_purple,racecar3)
         button("Helicopter",350,100,100,50,purple,bright_purple,helicopter)
+        unlock = db.is_vehicle_unlocked(1, 4)
         if unlock == False:
             button("Unlock: 5 gems",325,155,150,35,dark_grey,bright_grey,unlock_skin)
         else:
@@ -530,29 +531,28 @@ def racecar3():
 def helicopter():
     global carImg
     global unlock
-    
+    unlock = db.is_vehicle_unlocked(1, 4)
     if unlock == True:
         carImg = pygame.image.load('helicopter.png')
         print("you chose helicopter")
-        db.unlock_vehicle(1, 4)
     else:
-        print("you need to unlock this skin!")
+        print("you need to unlock this vehicle!")
     
 def unlock_skin():
     global unlock
     global gems
-    
+    unlock = db.is_vehicle_unlocked(1, 4)
     if unlock == False:
         if gems >= 5:
-            unlock = True
             gems -= 5
             print("you unlocked the helicopter!")
             db.update_gems(1, gems)
+            db.unlock_vehicle(1, 4)
         else:
             print("you need 5 gems!")
 
 def unlocked():
-    print("you already have this skin!")
+    print("you already have this vehicle!")
 
 
 #pause and unpause, quit
@@ -868,6 +868,7 @@ def multiplayer():
                       
         pygame.display.update()
         clock.tick(60)
+    
 
 game_intro()
 game_loop()
