@@ -1,7 +1,6 @@
 import pygame
 import time
 import random
-from bumper import *
 
 from db import Database
 
@@ -15,6 +14,9 @@ db.setup()
 pygame.init()
 crash_sound = pygame.mixer.Sound("Crash.wav")
 coins_drop = pygame.mixer.Sound("coins_drop.wav")
+button_sound = pygame.mixer.Sound("button_snd.wav")
+helicopter_sound = pygame.mixer.Sound("helicopter_snd.wav")
+engine_sound = pygame.mixer.Sound("engine_rev.wav")
 pygame.mixer.music.load("Drag_Race.wav")
 
 display_width = 800
@@ -142,7 +144,7 @@ def text_objects(text, font):
     return textSurface, textSurface.get_rect()
 
 def message_display(text,msg_x,msg_y):
-    medText = pygame.font.Font('freesansbold.ttf',30)
+    medText = pygame.font.Font('freesansbold.ttf',25)
     TextSurf, TextRect = text_objects(text, medText)
     TextRect.center = (msg_x,msg_y)
     gameDisplay.blit(TextSurf, TextRect)
@@ -158,6 +160,7 @@ def button(msg,x,y,w,h,ic,ac,action=None):
     if x + w > mouse[0] > x and y + h > mouse[1] > y:
         pygame.draw.rect(gameDisplay, ac, (x,y,w,h))
         if click[0] == 1:
+            pygame.mixer.Sound.play(button_sound)
             pygame.time.wait(150)
             action()
     else:     
@@ -239,15 +242,15 @@ def description():
                 pygame.quit()
                 quit()
 
-        largeText = pygame.font.Font('freesansbold.ttf',115)
+        largeText = pygame.font.Font('freesansbold.ttf',100)
         TextSurf, TextRect = text_objects("Description", largeText)
         TextRect.center = ((display_width/2),100)
         gameDisplay.blit(TextSurf, TextRect)
 
         message_display("Objective: Make your highscore as high as possible",400,250)
-        message_display("In-Game Controls:",400,300)
-        message_display("Left: left arrow, Right: right arrow",400,340)
-        message_display("Press 'p' to pause and 'escape' to go home",400,380)
+        message_display("In-Game Controls:",400,280)
+        message_display("Left: left arrow, Right: right arrow (A & D for multiplayer)",400,320)
+        message_display("Press 'p' to pause and 'escape' to go home",400,360)
 
         button("Back",150,450,100,50,green,bright_green,game_intro)
         button("QUIT",550,450,100,50,red,bright_red,quitgame)
@@ -411,11 +414,11 @@ def speed_buff():
     global coins
 
     if coins >= 20:
-        pygame.mixer.Sound.play(coins_drop)
         s_buff += 3
         print("you bought speed buff")
         print("-20 coins")
         coins -= 20
+        pygame.mixer.Sound.play(coins_drop)
         db.update_coins(1, coins)
     else:
         print("you do not have enough coins!")
@@ -425,11 +428,11 @@ def add_lives():
     global coins
 
     if coins >= 30:
-        pygame.mixer.Sound.play(coins_drop)
         lives += 1
         print("you bought 1 live")
         print("-30 coins")
         coins -= 30
+        pygame.mixer.Sound.play(coins_drop)
         db.update_coins(1, coins)
     else:
         print("you do not have enough coins!")
@@ -442,11 +445,11 @@ def speed_nerf():
 
     if coins >= 25:
         if bought_s_nerf == False:
-            pygame.mixer.Sound.play(coins_drop)
             s_nerf -= 0.15
             coins -= 25
             print("blocks slower by 15%")
             print("-25 coins")
+            pygame.mixer.Sound.play(coins_drop)
             nerf = True
             bought_s_nerf = True
             db.update_coins(1, coins)
@@ -460,11 +463,11 @@ def buy_coins():
     global coins
 
     if gems >= 5:
-        pygame.mixer.Sound.play(coins_drop)
         coins += 20
         print("you bought 20 coins")
         print("-5 gems")
         gems -= 5
+        pygame.mixer.Sound.play(coins_drop)
         db.update_coins(1, coins)
         db.update_gems(1, gems)
         
@@ -516,16 +519,19 @@ def vehicles():
 def racecar():
     global carImg
     carImg = pygame.image.load('racecar.png')
+    pygame.mixer.Sound.play(engine_sound)
     print("you chose racecar 1")
     
 def racecar2():
     global carImg
     carImg = pygame.image.load('racecar2.png')
+    pygame.mixer.Sound.play(engine_sound)
     print("you chose racecar 2")
 
 def racecar3():
     global carImg
     carImg = pygame.image.load('racecar3.png')
+    pygame.mixer.Sound.play(engine_sound)
     print("you chose racecar 3")
 
 def helicopter():
@@ -534,6 +540,7 @@ def helicopter():
     unlock = db.is_vehicle_unlocked(1, 4)
     if unlock == True:
         carImg = pygame.image.load('helicopter.png')
+        pygame.mixer.Sound.play(helicopter_sound)
         print("you chose helicopter")
     else:
         print("you need to unlock this vehicle!")
