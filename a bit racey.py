@@ -883,6 +883,8 @@ import pygame, math, sys, time
 from pygame.locals import *
 
 def racecourse():
+    global carImg
+    
     pygame.mixer.music.play(-1)
     
     screen = pygame.display.set_mode((display_width, display_height))
@@ -903,7 +905,7 @@ def racecourse():
 
         def __init__(self, image, position):
             pygame.sprite.Sprite.__init__(self)
-            self.src_image = pygame.image.load(image)
+            self.src_image = image
             self.position = position
             self.speed = self.direction = 0
             self.k_left = self.k_right = self.k_down = self.k_up = 0
@@ -981,7 +983,8 @@ def racecourse():
 
     # CREATE A CAR AND RUN
     rect = screen.get_rect()
-    car = CarSprite('images/racecar.png', (10, display_height-20))
+    image = pygame.transform.scale(carImg, (20, 27))
+    car = CarSprite(image, (10, display_height-20))
     car_group = pygame.sprite.RenderPlain(car)
 
     can_crash_sound = True
