@@ -1,5 +1,6 @@
 import pygame
 import time
+import math, sys
 import random
 
 from db import Database
@@ -879,7 +880,6 @@ def multiplayer():
         clock.tick(60)
 
 #initialize the screen
-import pygame, math, sys, time
 from pygame.locals import *
 
 def racecourse():
