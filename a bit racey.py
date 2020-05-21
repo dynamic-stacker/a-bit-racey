@@ -1068,7 +1068,7 @@ def racecourse():
         trophy_group.draw(screen)
         #Counter Render
         screen.blit(timer_text, (20,40))
-        screen.blit(win_text, (210, 550))
+        screen.blit(win_text, (180, 550))
         screen.blit(loss_text, (210, 550))
         pygame.display.flip()
     
