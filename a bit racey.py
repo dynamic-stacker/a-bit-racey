@@ -1026,7 +1026,7 @@ def racecourse():
             
     
         #RENDERING
-        screen.fill((255,255,255))
+        screen.fill((105,110,105))
         car_group.update(deltat)
         collisions = pygame.sprite.groupcollide(car_group, pad_group, False, False, collided = None)
         if collisions != {}:
