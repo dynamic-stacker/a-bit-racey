@@ -13,12 +13,12 @@ db = Database()
 db.setup()
 
 pygame.init()
-crash_sound = pygame.mixer.Sound("Crash.wav")
-coins_drop = pygame.mixer.Sound("coins_drop.wav")
-button_sound = pygame.mixer.Sound("button_snd.wav")
-helicopter_sound = pygame.mixer.Sound("helicopter_snd.wav")
-engine_sound = pygame.mixer.Sound("engine_rev.wav")
-pygame.mixer.music.load("Drag_Race.wav")
+crash_sound = pygame.mixer.Sound("msc_snds/Crash.wav")
+coins_drop = pygame.mixer.Sound("msc_snds/coins_drop.wav")
+button_sound = pygame.mixer.Sound("msc_snds/button_snd.wav")
+helicopter_sound = pygame.mixer.Sound("msc_snds/helicopter_snd.wav")
+engine_sound = pygame.mixer.Sound("msc_snds/engine_rev.wav")
+pygame.mixer.music.load("msc_snds/Drag_Race.wav")
 
 display_width = 800
 
@@ -66,13 +66,13 @@ nerf = False
 unlock = db.is_vehicle_unlocked(1, 4)
 
 gameDisplay = pygame.display.set_mode((display_width,display_height))
-pygame.display.set_caption('A bit Racey')
+pygame.display.set_caption('images/A bit Racey')
 clock = pygame.time.Clock()
 
-carImg = pygame.image.load('racecar.png')
-gameIcon = pygame.image.load('racecaricon.png')
-intro_img = pygame.image.load('intro_img.png')
-intro_img2 = pygame.image.load('intro_img2.png')
+carImg = pygame.image.load('images/racecar.png')
+gameIcon = pygame.image.load('images/racecaricon.png')
+intro_img = pygame.image.load('images/intro_img.png')
+intro_img2 = pygame.image.load('images/intro_img2.png')
 
 pygame.display.set_icon(gameIcon)
 
@@ -358,15 +358,15 @@ def music():
         clock.tick(15)
     
 def play_Drag():
-    pygame.mixer.music.load("Drag_Race.wav")
+    pygame.mixer.music.load("images/Drag_Race.wav")
     print("Drag is chosen")
     
 def play_Jazz():
-    pygame.mixer.music.load("Jazz_in_Paris.wav")
+    pygame.mixer.music.load("images/Jazz_in_Paris.wav")
     print("Jazz is chosen")
 
 def play_Country():
-    pygame.mixer.music.load("Cherokee_Shuffle.wav")
+    pygame.mixer.music.load("images/Cherokee_Shuffle.wav")
     print("Country is chosen")
 
 
@@ -521,19 +521,19 @@ def vehicles():
 
 def racecar():
     global carImg
-    carImg = pygame.image.load('racecar.png')
+    carImg = pygame.image.load('images/racecar.png')
     pygame.mixer.Sound.play(engine_sound)
     print("you chose racecar 1")
     
 def racecar2():
     global carImg
-    carImg = pygame.image.load('racecar2.png')
+    carImg = pygame.image.load('images/racecar2.png')
     pygame.mixer.Sound.play(engine_sound)
     print("you chose racecar 2")
 
 def racecar3():
     global carImg
-    carImg = pygame.image.load('racecar3.png')
+    carImg = pygame.image.load('images/racecar3.png')
     pygame.mixer.Sound.play(engine_sound)
     print("you chose racecar 3")
 
@@ -542,7 +542,7 @@ def helicopter():
     global unlock
     unlock = db.is_vehicle_unlocked(1, 4)
     if unlock == True:
-        carImg = pygame.image.load('helicopter.png')
+        carImg = pygame.image.load('images/helicopter.png')
         pygame.mixer.Sound.play(helicopter_sound)
         print("you chose helicopter")
     else:
@@ -1014,7 +1014,8 @@ def racecourse():
             elif event.key == K_ESCAPE: sys.exit(0)    
     
         #COUNTDOWN TIMER
-        seconds = round((25 - dt),2)
+        time_allowance = 25
+        seconds = round((time_allowance - dt),2)
         if win_condition == None:
             timer_text = font.render(str(seconds), True, (255,255,0))
             if seconds <= 0:
@@ -1049,6 +1050,7 @@ def racecourse():
             win_condition = True
             car.MAX_FORWARD_SPEED = 0
             car.MAX_REVERSE_SPEED = 0
+            print("Time taken:" + str(time_allowance - seconds))
             win_text = win_font.render('Press Space to Home', True, (0,255,0))
             if win_condition == True:
                 car.k_right = -5
@@ -1066,7 +1068,5 @@ def racecourse():
     
 
 game_intro()
-game_loop()
-multiplayer()
 pygame.quit()
 quit()
