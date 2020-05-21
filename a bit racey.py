@@ -150,8 +150,6 @@ def message_display(text,msg_x,msg_y):
     gameDisplay.blit(TextSurf, TextRect)
 
     pygame.display.update()
-    
-    #time.sleep(2)
 
 def button(msg,x,y,w,h,ic,ac,action=None):
     mouse = pygame.mouse.get_pos()
@@ -1003,7 +1001,7 @@ def racecourse():
                 if event.key == K_LEFT: car.k_left = down * 6
                 if event.key == K_UP: car.k_up = down * 2
                 if event.key == K_DOWN: car.k_down = down * -2 
-                if event.key == K_ESCAPE: game_intro() # quit the game
+                if event.key == K_ESCAPE: game_intro() # quit the game, go back to main menu
             elif win_condition == True and event.key == K_ESCAPE: game_intro()
             elif win_condition == True and event.key == K_SPACE: racecourse()
             elif win_condition == False and event.key == K_SPACE:
@@ -1026,7 +1024,7 @@ def racecourse():
             
     
         #RENDERING
-        screen.fill((105,110,105))
+        screen.fill((255,255,255))
         car_group.update(deltat)
         collisions = pygame.sprite.groupcollide(car_group, pad_group, False, False, collided = None)
         if collisions != {}:
