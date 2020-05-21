@@ -55,7 +55,6 @@ gems = db.get_gems(1);
 score = 0
 h_score = db.get_highscore(1);
 lives = 1
-gems+=5
 
 speed = 5
 s_buff = 0
@@ -358,15 +357,15 @@ def music():
         clock.tick(15)
     
 def play_Drag():
-    pygame.mixer.music.load("images/Drag_Race.wav")
+    pygame.mixer.music.load("msc_snds/Drag_Race.wav")
     print("Drag is chosen")
     
 def play_Jazz():
-    pygame.mixer.music.load("images/Jazz_in_Paris.wav")
+    pygame.mixer.music.load("msc_snds/Jazz_in_Paris.wav")
     print("Jazz is chosen")
 
 def play_Country():
-    pygame.mixer.music.load("images/Cherokee_Shuffle.wav")
+    pygame.mixer.music.load("msc_snds/Cherokee_Shuffle.wav")
     print("Country is chosen")
 
 
@@ -1004,8 +1003,9 @@ def racecourse():
                 if event.key == K_LEFT: car.k_left = down * 6
                 if event.key == K_UP: car.k_up = down * 2
                 if event.key == K_DOWN: car.k_down = down * -2 
-                if event.key == K_ESCAPE: sys.exit(0) # quit the game
-            elif win_condition == True and event.key == K_SPACE: game_intro()
+                if event.key == K_ESCAPE: game_intro() # quit the game
+            elif win_condition == True and event.key == K_ESCAPE: game_intro()
+            elif win_condition == True and event.key == K_SPACE: racecourse()
             elif win_condition == False and event.key == K_SPACE:
                 can_crash_sound = True
                 racecourse()
@@ -1016,6 +1016,7 @@ def racecourse():
         #COUNTDOWN TIMER
         time_allowance = 25
         seconds = round((time_allowance - dt),2)
+        record_time = db.get_record(1)
         if win_condition == None:
             timer_text = font.render(str(seconds), True, (255,255,0))
             if seconds <= 0:
@@ -1050,8 +1051,13 @@ def racecourse():
             win_condition = True
             car.MAX_FORWARD_SPEED = 0
             car.MAX_REVERSE_SPEED = 0
-            print("Time taken:" + str(time_allowance - seconds))
-            win_text = win_font.render('Press Space to Home', True, (0,255,0))
+            time_taken = time_allowance - seconds
+            if record_time > time_taken:
+                record_time = time_taken
+            print("Record Time:" + str(record_time))
+            print("Time taken:" + str(time_taken))
+            db.update_record(1, record_time)
+            win_text = win_font.render('Escape to home, Space to play', True, (0,255,0))
             if win_condition == True:
                 car.k_right = -5
                 
@@ -1061,7 +1067,7 @@ def racecourse():
         car_group.draw(screen)
         trophy_group.draw(screen)
         #Counter Render
-        screen.blit(timer_text, (20,50))
+        screen.blit(timer_text, (20,40))
         screen.blit(win_text, (210, 550))
         screen.blit(loss_text, (210, 550))
         pygame.display.flip()
