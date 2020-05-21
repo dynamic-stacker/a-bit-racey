@@ -1018,7 +1018,7 @@ def racecourse():
         seconds = round((time_allowance - dt),2)
         record_time = db.get_record(1)
         if win_condition == None:
-            timer_text = font.render(str(seconds), True, (255,255,0))
+            timer_text = font.render(str(seconds), True, (0,0,255))
             if seconds <= 0:
                 win_condition = False
                 timer_text = font.render("Time!", True, (255,0,0))
@@ -1054,6 +1054,7 @@ def racecourse():
             time_taken = time_allowance - seconds
             if record_time > time_taken:
                 record_time = time_taken
+            print(" ")
             print("Record Time:" + str(record_time))
             print("Time taken:" + str(time_taken))
             db.update_record(1, record_time)
