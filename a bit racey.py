@@ -607,10 +607,6 @@ def game_loop():
     global lives
     global score
     global h_score
-    
-    print ("Current highscore:" + str(h_score))
-    print("Coins:" + str(coins))
-    print ("Gems:" + str(gems))
 
     global car_width
 
@@ -833,11 +829,6 @@ def multiplayer():
 
         if thing_starty > display_height:
             thing_starty = 0 - thing_height
-            print(mid_line)
-
-            print(thing_width)
-
-            print(mid_line - thing_width)
 
             thing_startx = random.randrange(0, round(mid_line - thing_width))
             thing2_startx = thing_startx + 400
@@ -1004,11 +995,14 @@ def racecourse():
                 if event.key == K_ESCAPE: game_intro() # quit the game, go back to main menu
             elif win_condition == True and event.key == K_ESCAPE: game_intro()
             elif win_condition == True and event.key == K_SPACE: racecourse()
-            elif win_condition == False and event.key == K_SPACE:
-                can_crash_sound = True
-                racecourse()
-                pygame.mixer.music.unpause()
-                t0 = t1
+            elif win_condition == False:
+                if event.key == K_SPACE:
+                    can_crash_sound = True
+                    racecourse()
+                    pygame.mixer.music.unpause()
+                    t0 = t1
+                if event.key == K_ESCAPE:
+                    game_intro()
             elif event.key == K_ESCAPE: sys.exit(0)    
     
         #COUNTDOWN TIMER
@@ -1035,7 +1029,7 @@ def racecourse():
                 pygame.mixer.Sound.play(crash_sound)
                 can_crash_sound = False
             car.image = pygame.image.load('images/collision.png')
-            loss_text = win_font.render('Press Space to Retry', True, (255,0,0))
+            loss_text = win_font.render('Space to Retry, Escape to home', True, (255,0,0))
             seconds = 0
             car.MAX_FORWARD_SPEED = 0
             car.MAX_REVERSE_SPEED = 0
@@ -1068,7 +1062,7 @@ def racecourse():
         #Counter Render
         screen.blit(timer_text, (20,40))
         screen.blit(win_text, (180, 550))
-        screen.blit(loss_text, (210, 550))
+        screen.blit(loss_text, (180, 550))
         pygame.display.flip()
     
 
