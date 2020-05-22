@@ -925,21 +925,6 @@ def racecourse():
         def update(self, hit_list):
             if self in hit_list: self.image = self.hit
             else: self.image = self.normal
-##    pads = [
-##        PadSprite((0, 10)),
-##        PadSprite((600, 10)),
-##        PadSprite((1100, 10)),
-##        PadSprite((100, 150)),
-##        PadSprite((600, 150)),
-##        PadSprite((100, 300)),
-##        PadSprite((800, 300)),
-##        PadSprite((400, 450)),
-##        PadSprite((700, 450)),
-##        PadSprite((200, 600)),
-##        PadSprite((900, 600)),
-##        PadSprite((400, 750)),
-##        PadSprite((800, 750)),
-##    ]
 
     pads = [
         PadSprite((0, 10)),
