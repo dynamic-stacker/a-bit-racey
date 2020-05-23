@@ -65,7 +65,7 @@ nerf = False
 unlock = db.is_vehicle_unlocked(1, 4)
 
 gameDisplay = pygame.display.set_mode((display_width,display_height))
-pygame.display.set_caption('images/A bit Racey')
+pygame.display.set_caption('A bit Racey')
 clock = pygame.time.Clock()
 
 carImg = pygame.image.load('images/racecar.png')
@@ -157,11 +157,11 @@ def button(msg,x,y,w,h,ic,ac,action=None):
 
     if x + w > mouse[0] > x and y + h > mouse[1] > y:
         pygame.draw.rect(gameDisplay, ac, (x,y,w,h))
-        if click[0] == 1:
+        if click[0] == 1: #left click
             pygame.mixer.Sound.play(button_sound)
             pygame.time.wait(150)
-            action()
-    else:     
+            action()      
+    else:
         pygame.draw.rect(gameDisplay, ic, (x,y,w,h))
 
     smallText = pygame.font.Font("freesansbold.ttf", 20)
@@ -489,7 +489,7 @@ def vehicles():
 
         largeText = pygame.font.Font('freesansbold.ttf',115)
         mediumText = pygame.font.Font('freesansbold.ttf',80)
-        TextSurf, TextRect = text_objects("Choose skin", mediumText)
+        TextSurf, TextRect = text_objects("Garage", mediumText)
         TextRect.center = ((display_width/2),(display_height/2))
         gameDisplay.blit(TextSurf, TextRect)
 
@@ -510,8 +510,46 @@ def vehicles():
         else:
             button("Unlocked",325,155,150,35,white,white,unlocked)
 
+        button("Preview",350,25,100,50,bright_grey,dark_grey,preview)
+
         coins_earned(coins)
         gems_collected(gems)
+
+        pygame.display.update()
+        clock.tick(15)
+
+def preview():
+    preview = True
+    gameDisplay.fill(white)
+    
+    while preview:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+        largeText = pygame.font.Font('freesansbold.ttf',75)
+        TextSurf, TextRect = text_objects("Preview of vehicles", largeText)
+        TextRect.center = ((display_width/2),75)
+        gameDisplay.blit(TextSurf, TextRect)
+
+        preview1 = pygame.image.load("images/racecar.png")
+        preview2 = pygame.image.load("images/racecar2.png")
+        preview3 = pygame.image.load("images/racecar3.png")
+        preview4 = pygame.image.load("images/helicopter.png")
+
+        image1 = pygame.transform.scale(preview1, (150, 180))
+        image2 = pygame.transform.scale(preview2, (150, 180))
+        image3 = pygame.transform.scale(preview3, (150, 180))
+        image4 = pygame.transform.scale(preview4, (150, 180))
+
+        gameDisplay.blit(image1,(40,200))
+        gameDisplay.blit(image2,(230,200))
+        gameDisplay.blit(image3,(430,200))
+        gameDisplay.blit(image4,(610,200))
+
+        button("Back",150,500,100,50,green,bright_green,vehicles)
+        button("QUIT",550,500,100,50,red,bright_red,quitgame)
 
         pygame.display.update()
         clock.tick(15)
