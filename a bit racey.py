@@ -499,7 +499,8 @@ def vehicles():
         button("QUIT",550,450,100,50,red,bright_red,quitgame)
         button("Shop",350,400,100,50,blue,bright_blue,shop)
         button("Music",350,500,100,50,yellow,bright_yellow,music)
-
+        
+        button("Preview",350,25,100,50,bright_grey,dark_grey,preview)
         button("Racecar 1",150,200,100,50,purple,bright_purple,racecar)
         button("Racecar 2",350,200,100,50,purple,bright_purple,racecar2)
         button("Racecar 3",550,200,100,50,purple,bright_purple,racecar3)
@@ -509,8 +510,6 @@ def vehicles():
             button("Unlock: 5 gems",325,155,150,35,dark_grey,bright_grey,unlock_skin)
         else:
             button("Unlocked",325,155,150,35,white,white,unlocked)
-
-        button("Preview",350,25,100,50,bright_grey,dark_grey,preview)
 
         coins_earned(coins)
         gems_collected(gems)
