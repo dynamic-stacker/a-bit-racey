@@ -28,6 +28,7 @@ class Database:
         self.cursor.execute(table_player_vehicle)
         self.cursor.execute(admin_player)
         self.cursor.execute(race_timings)
+        self.cursor.execute(admin_timings)
         
         self.conn.commit()
 
