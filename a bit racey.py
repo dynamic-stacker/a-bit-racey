@@ -98,26 +98,26 @@ def high_score(count):
 def coins_earned(count):
     font_c = pygame.font.SysFont(None, 25)
     text_c = font_c.render("Coins: " + str(count), True, gold)
-    gameDisplay.blit(text_c, (700,5))
+    gameDisplay.blit(text_c, (700,3))
     
-    pygame.draw.circle(gameDisplay, gold, (685,14), 9)
+    pygame.draw.circle(gameDisplay, gold, (685,12), 9)
     
     ltr_S = font_c.render("S", True, dark_gold)
-    gameDisplay.blit(ltr_S, (680,6))
+    gameDisplay.blit(ltr_S, (680,4))
 
     font_l = pygame.font.SysFont(None, 29)
     ltr_l = font_l.render("l", True, dark_gold)
-    gameDisplay.blit(ltr_l, (683,5))
+    gameDisplay.blit(ltr_l, (683,3))
 
 def gems_collected(count):
     font_g = pygame.font.SysFont(None, 25)
     text_g = font_g.render("Gems: " + str(count), True, gem_color)
-    gameDisplay.blit(text_g, (598,5))
+    gameDisplay.blit(text_g, (598,3))
     
-    pygame.draw.circle(gameDisplay, gem_color, (585,14), 9)
+    pygame.draw.circle(gameDisplay, gem_color, (585,12), 9)
 
     ltr_G = font_g.render("G", True, dark_green)
-    gameDisplay.blit(ltr_G, (578,5))
+    gameDisplay.blit(ltr_G, (578,3))
 
 def lives_left(count):
     font_l = pygame.font.SysFont(None, 25)
@@ -707,7 +707,7 @@ def game_loop():
         x += x_change   
 
         gameDisplay.fill(white)
-        gameDisplay.blit(bg_img, (0, 20))
+        gameDisplay.blit(bg_img, (0, 0))
 
         things(thing_startx, thing_starty, thing_width, thing_height, block_color)
         thing_starty += thing_speed
