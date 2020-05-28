@@ -72,6 +72,8 @@ carImg = pygame.image.load('images/racecar.png')
 gameIcon = pygame.image.load('images/racecaricon.png')
 intro_img = pygame.image.load('images/intro_img.png')
 intro_img2 = pygame.image.load('images/intro_img2.png')
+bg_img = pygame.image.load('images/bg.png')
+bg_img = pygame.transform.scale(bg_img, (800, 600))
 
 pygame.display.set_icon(gameIcon)
 
@@ -703,8 +705,9 @@ def game_loop():
             x_change = speed
         
         x += x_change   
-                
+
         gameDisplay.fill(white)
+        gameDisplay.blit(bg_img, (0, 20))
 
         things(thing_startx, thing_starty, thing_width, thing_height, block_color)
         thing_starty += thing_speed
