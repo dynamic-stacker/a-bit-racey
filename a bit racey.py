@@ -22,6 +22,7 @@ engine_sound = pygame.mixer.Sound("msc_snds/engine_rev.wav")
 pygame.mixer.music.load("msc_snds/Drag_Race.wav")
 
 is_muted = False
+snd_muted = False
 
 display_width = 800
 
@@ -103,24 +104,24 @@ def coins_earned(count):
     text_c = font_c.render("Coins: " + str(count), True, gold)
     gameDisplay.blit(text_c, (700,3))
     
-##    pygame.draw.circle(gameDisplay, gold, (685,12), 9)
-##    
-##    ltr_S = font_c.render("S", True, dark_gold)
-##    gameDisplay.blit(ltr_S, (680,4))
-##
-##    font_l = pygame.font.SysFont(None, 29)
-##    ltr_l = font_l.render("l", True, dark_gold)
-##    gameDisplay.blit(ltr_l, (683,3))
+    pygame.draw.circle(gameDisplay, gold, (685,12), 9)
+    
+    ltr_S = font_c.render("S", True, dark_gold)
+    gameDisplay.blit(ltr_S, (680,4))
+
+    font_l = pygame.font.SysFont(None, 29)
+    ltr_l = font_l.render("l", True, dark_gold)
+    gameDisplay.blit(ltr_l, (683,3))
 
 def gems_collected(count):
     font_g = pygame.font.SysFont(None, 25)
     text_g = font_g.render("Gems: " + str(count), True, gem_color)
     gameDisplay.blit(text_g, (598,3))
     
-##    pygame.draw.circle(gameDisplay, gem_color, (585,12), 9)
-##
-##    ltr_G = font_g.render("G", True, dark_green)
-##    gameDisplay.blit(ltr_G, (578,3))
+    pygame.draw.circle(gameDisplay, gem_color, (585,12), 9)
+
+    ltr_G = font_g.render("G", True, dark_green)
+    gameDisplay.blit(ltr_G, (578,3))
 
 def lives_left(count):
     font_l = pygame.font.SysFont(None, 25)
@@ -157,13 +158,15 @@ def message_display(text,msg_x,msg_y):
     pygame.display.update()
 
 def button(msg,x,y,w,h,ic,ac,action=None):
+    global snd_muted
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
 
     if x + w > mouse[0] > x and y + h > mouse[1] > y:
         pygame.draw.rect(gameDisplay, ac, (x,y,w,h))
         if click[0] == 1: #left click
-            pygame.mixer.Sound.play(button_sound)
+            if snd_muted == False:
+                pygame.mixer.Sound.play(button_sound)
             pygame.time.wait(150)
             action()      
     else:
@@ -198,8 +201,7 @@ def game_intro():
     intro = True
 
     while intro:
-        for event in pygame.event.get():
-            
+        for event in pygame.event.get():        
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
@@ -239,6 +241,10 @@ def modes():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.mixer.music.pause()
+                    game_intro()
 
         #button(msg,x,y,w,h,ic,ac,action=None)
         button("Normal",150,450,100,50,green,bright_green,game_loop)
@@ -263,6 +269,10 @@ def description():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.mixer.music.pause()
+                    game_intro()
 
         largeText = pygame.font.Font('freesansbold.ttf',100)
         TextSurf, TextRect = text_objects("Description", largeText)
@@ -282,14 +292,18 @@ def description():
 
 def settings():
     global is_muted
-    settings = True
-
+    global snd_muted
     
+    settings = True
     while settings:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.mixer.music.pause()
+                    game_intro()
 
         gameDisplay.fill(white)
 
@@ -302,11 +316,16 @@ def settings():
             button("Mute",150,250,100,50,bright_grey,dark_grey,mute)
         if is_muted == True:
             button("Unmute",550,250,100,50,bright_grey,dark_grey,unmute)
+        if snd_muted == False:
+            button("Off",150,350,100,50,bright_grey,dark_grey,sound_off)
+        if snd_muted == True:
+            button("On",550,350,100,50,bright_grey,dark_grey,sound_on)
 
         button("Back",150,450,100,50,green,bright_green,game_intro)
         button("QUIT",550,450,100,50,red,bright_red,quitgame)
 
-        message_display("Music settings",400,270)
+        message_display("Music settings",400,275)
+        message_display("Sound settings",400,375)
 
         pygame.display.update()
         clock.tick(15)
@@ -315,15 +334,26 @@ def unmute():
     global is_muted
     pygame.mixer.music.load("msc_snds/Drag_race.wav")
     is_muted = False
-
+    
 def mute():
     global is_muted
     pygame.mixer.music.load("msc_snds/silence.wav")
     is_muted = True
+
+def sound_on():
+    global snd_muted
+    snd_muted = False
+
+def sound_off():
+    global snd_muted
+    snd_muted = True
         
 def crash(car_id, play_mode):
+    global snd_muted
+    
     pygame.mixer.music.stop()
-    pygame.mixer.Sound.play(crash_sound)
+    if snd_muted == False:
+        pygame.mixer.Sound.play(crash_sound)
 
     if play_mode == 'single_player':
         # Update database highscore, similar hard coding this part
@@ -346,6 +376,10 @@ def crash(car_id, play_mode):
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.mixer.music.pause()
+                    game_intro()
 
         #gameDisplay.fill(white)
         button("Normal",150,450,105,50,green,bright_green,game_loop)
@@ -360,10 +394,12 @@ def crash(car_id, play_mode):
         
 def survived():
     global lives
+    global snd_muted
     
     survived = True
     pygame.mixer.music.stop()
-    pygame.mixer.Sound.play(crash_sound)
+    if snd_muted == False:
+        pygame.mixer.Sound.play(crash_sound)
     
     largeText = pygame.font.Font('freesansbold.ttf',115)
     TextSurf, TextRect = text_objects("You lost 1 live!", largeText)
@@ -377,6 +413,10 @@ def survived():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.mixer.music.pause()
+                    game_intro()
         
         button("Continue",150,450,100,50,green,bright_green,game_loop)
         button("QUIT",550,450,100,50,red,bright_red,quitgame)
@@ -400,6 +440,10 @@ def music():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.mixer.music.pause()
+                    game_intro()
 
         #gameDisplay.fill(white)
 
@@ -450,6 +494,10 @@ def shop():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.mixer.music.pause()
+                    game_intro()
 
         gameDisplay.fill(white)
         largeText = pygame.font.Font('freesansbold.ttf',115)
@@ -487,13 +535,15 @@ def shop():
 def speed_buff():
     global s_buff
     global coins
+    global snd_muted
 
     if coins >= 20:
         s_buff += 3
         print("you bought speed buff")
         print("-20 coins")
         coins -= 20
-        pygame.mixer.Sound.play(coins_drop)
+        if snd_muted == False:
+            pygame.mixer.Sound.play(coins_drop)
         db.update_coins(1, coins)
     else:
         print("you do not have enough coins!")
@@ -501,13 +551,15 @@ def speed_buff():
 def add_lives():
     global lives
     global coins
+    global snd_muted
 
     if coins >= 30:
         lives += 1
         print("you bought 1 live")
         print("-30 coins")
         coins -= 30
-        pygame.mixer.Sound.play(coins_drop)
+        if snd_muted == False:
+            pygame.mixer.Sound.play(coins_drop)
         db.update_coins(1, coins)
     else:
         print("you do not have enough coins!")
@@ -517,6 +569,7 @@ def speed_nerf():
     global nerf
     global bought_s_nerf
     global coins
+    global snd_muted
 
     if coins >= 25:
         if bought_s_nerf == False:
@@ -524,7 +577,8 @@ def speed_nerf():
             coins -= 25
             print("blocks slower by 15%")
             print("-25 coins")
-            pygame.mixer.Sound.play(coins_drop)
+            if snd_muted == False:
+                pygame.mixer.Sound.play(coins_drop)
             nerf = True
             bought_s_nerf = True
             db.update_coins(1, coins)
@@ -536,13 +590,15 @@ def speed_nerf():
 def buy_coins():
     global gems
     global coins
+    global snd_muted
 
     if gems >= 5:
         coins += 20
         print("you bought 20 coins")
         print("-5 gems")
         gems -= 5
-        pygame.mixer.Sound.play(coins_drop)
+        if snd_muted == False:
+            pygame.mixer.Sound.play(coins_drop)
         db.update_coins(1, coins)
         db.update_gems(1, gems)
         
@@ -559,6 +615,10 @@ def vehicles():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.mixer.music.pause()
+                    game_intro()
 
         gameDisplay.fill(white)
 
@@ -601,6 +661,10 @@ def preview():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.mixer.music.pause()
+                    game_intro()
 
         largeText = pygame.font.Font('freesansbold.ttf',75)
         TextSurf, TextRect = text_objects("Preview of vehicles", largeText)
@@ -631,19 +695,22 @@ def preview():
 def racecar():
     global carImg
     carImg = pygame.image.load('images/racecar.png')
-    pygame.mixer.Sound.play(engine_sound)
+    if snd_muted == False:
+        pygame.mixer.Sound.play(engine_sound)
     print("you chose racecar 1")
     
 def racecar2():
     global carImg
     carImg = pygame.image.load('images/racecar2.png')
-    pygame.mixer.Sound.play(engine_sound)
+    if snd_muted == False:
+        pygame.mixer.Sound.play(engine_sound)
     print("you chose racecar 2")
 
 def racecar3():
     global carImg
     carImg = pygame.image.load('images/racecar3.png')
-    pygame.mixer.Sound.play(engine_sound)
+    if snd_muted == False:
+        pygame.mixer.Sound.play(engine_sound)
     print("you chose racecar 3")
 
 def helicopter():
@@ -652,7 +719,8 @@ def helicopter():
     unlock = db.is_vehicle_unlocked(1, 4)
     if unlock == True:
         carImg = pygame.image.load('images/helicopter.png')
-        pygame.mixer.Sound.play(helicopter_sound)
+        if snd_muted == False:
+            pygame.mixer.Sound.play(helicopter_sound)
         print("you chose helicopter")
     else:
         print("you need to unlock this vehicle!")
@@ -688,6 +756,10 @@ def paused():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.mixer.music.pause()
+                    game_intro()
 
         #gameDisplay.fill(white)
         button("GO!",150,450,100,50,green,bright_green,game_loop)
@@ -736,7 +808,7 @@ def game_loop():
 
     thing_startx = random.randrange(0, display_width)
     thing_starty = -600
-    thing_speed = 10
+    thing_speed = 7
     thing_width = 100
     thing_height = 100
 
@@ -807,7 +879,7 @@ def game_loop():
             coins += 1
             db.update_coins(1, coins)
             
-            if thing_speed < 20:
+            if thing_speed < 17:
                 thing_speed += 1
                 if nerf == True:
                     thing_speed *= s_nerf
@@ -985,6 +1057,7 @@ from pygame.locals import *
 
 def racecourse():
     global carImg
+    global snd_muted
     
     pygame.mixer.music.play(-1)
     
@@ -1123,7 +1196,7 @@ def racecourse():
             win_condition = False
             timer_text = font.render("Crash!", True, (255,0,0))
             pygame.mixer.music.pause()
-            if can_crash_sound == True:
+            if can_crash_sound == True and snd_muted == False:
                 pygame.mixer.Sound.play(crash_sound)
                 can_crash_sound = False
             car.image = pygame.image.load('images/collision.png')
@@ -1162,8 +1235,11 @@ def racecourse():
         screen.blit(win_text, (180, 550))
         screen.blit(loss_text, (180, 550))
         pygame.display.flip()
-    
 
 game_intro()
 pygame.quit()
 quit()
+
+    
+
+
