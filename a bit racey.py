@@ -13,12 +13,15 @@ db = Database()
 db.setup()
 
 pygame.init()
+
 crash_sound = pygame.mixer.Sound("msc_snds/Crash.wav")
 coins_drop = pygame.mixer.Sound("msc_snds/coins_drop.wav")
 button_sound = pygame.mixer.Sound("msc_snds/button_snd.wav")
 helicopter_sound = pygame.mixer.Sound("msc_snds/helicopter_snd.wav")
 engine_sound = pygame.mixer.Sound("msc_snds/engine_rev.wav")
 pygame.mixer.music.load("msc_snds/Drag_Race.wav")
+
+is_muted = False
 
 display_width = 800
 
@@ -199,6 +202,7 @@ def game_intro():
         button("Shop",350,500,100,50,blue,bright_blue,shop)
         button("Garage",350,150,100,50,purple,bright_purple,vehicles)
         button("Description",10,10,150,50,bright_grey,dark_grey,description)
+        button("Settings",680,10,100,40,bright_grey,dark_grey,settings)
 
         pygame.display.update()
         clock.tick(15)
@@ -259,6 +263,45 @@ def description():
 
         pygame.display.update()
         clock.tick(15)
+
+def settings():
+    global is_muted
+    settings = True
+
+    
+    while settings:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+        gameDisplay.fill(white)
+
+        largeText = pygame.font.Font('freesansbold.ttf',100)
+        TextSurf, TextRect = text_objects("Settings", largeText)
+        TextRect.center = ((display_width/2),125)
+        gameDisplay.blit(TextSurf, TextRect)
+
+        if is_muted == False:
+            button("Mute",150,250,100,50,bright_grey,dark_grey,mute)
+        if is_muted == True:
+            button("Unmute",550,250,100,50,bright_grey,dark_grey,unmute)
+
+        button("Back",150,450,100,50,green,bright_green,game_intro)
+        button("QUIT",550,450,100,50,red,bright_red,quitgame)
+
+        pygame.display.update()
+        clock.tick(15)
+
+def mute():
+    global is_muted
+    pygame.mixer.music.load("msc_snds/Drag_race.wav")
+    is_muted = True
+
+def unmute():
+    global is_muted
+    pygame.mixer.music.load("msc_snds/silence.wav")
+    is_muted = False
         
 def crash(car_id, play_mode):
     pygame.mixer.music.stop()
