@@ -103,24 +103,24 @@ def coins_earned(count):
     text_c = font_c.render("Coins: " + str(count), True, gold)
     gameDisplay.blit(text_c, (700,3))
     
-    pygame.draw.circle(gameDisplay, gold, (685,12), 9)
-    
-    ltr_S = font_c.render("S", True, dark_gold)
-    gameDisplay.blit(ltr_S, (680,4))
-
-    font_l = pygame.font.SysFont(None, 29)
-    ltr_l = font_l.render("l", True, dark_gold)
-    gameDisplay.blit(ltr_l, (683,3))
+##    pygame.draw.circle(gameDisplay, gold, (685,12), 9)
+##    
+##    ltr_S = font_c.render("S", True, dark_gold)
+##    gameDisplay.blit(ltr_S, (680,4))
+##
+##    font_l = pygame.font.SysFont(None, 29)
+##    ltr_l = font_l.render("l", True, dark_gold)
+##    gameDisplay.blit(ltr_l, (683,3))
 
 def gems_collected(count):
     font_g = pygame.font.SysFont(None, 25)
     text_g = font_g.render("Gems: " + str(count), True, gem_color)
     gameDisplay.blit(text_g, (598,3))
     
-    pygame.draw.circle(gameDisplay, gem_color, (585,12), 9)
-
-    ltr_G = font_g.render("G", True, dark_green)
-    gameDisplay.blit(ltr_G, (578,3))
+##    pygame.draw.circle(gameDisplay, gem_color, (585,12), 9)
+##
+##    ltr_G = font_g.render("G", True, dark_green)
+##    gameDisplay.blit(ltr_G, (578,3))
 
 def lives_left(count):
     font_l = pygame.font.SysFont(None, 25)
@@ -173,6 +173,24 @@ def button(msg,x,y,w,h,ic,ac,action=None):
     textSurf, textRect = text_objects(msg, smallText)
     textRect.center = ((x+(w/2)), (y+(h/2)))
     gameDisplay.blit(textSurf, textRect)
+
+def large_button(msg,x,y,w,h,ic,ac,action=None):
+    mouse = pygame.mouse.get_pos()
+    click = pygame.mouse.get_pressed()
+
+    if x + w > mouse[0] > x and y + h > mouse[1] > y:
+        pygame.draw.rect(gameDisplay, ac, (x,y,w,h))
+        if click[0] == 1: #left click
+            pygame.mixer.Sound.play(button_sound)
+            pygame.time.wait(150)
+            action()      
+    else:
+        pygame.draw.rect(gameDisplay, ic, (x,y,w,h))
+
+    smallText = pygame.font.Font("freesansbold.ttf", 50)
+    textSurf, textRect = text_objects(msg, smallText)
+    textRect.center = ((x+(w/2)), (y+(h/2)))
+    gameDisplay.blit(textSurf, textRect)
     
 #screens
 def game_intro():
@@ -202,7 +220,7 @@ def game_intro():
         button("Shop",350,500,100,50,blue,bright_blue,shop)
         button("Garage",350,150,100,50,purple,bright_purple,vehicles)
         button("Description",10,10,150,50,bright_grey,dark_grey,description)
-        button("Settings",680,10,100,40,bright_grey,dark_grey,settings)
+        large_button("#",740,10,50,50,bright_grey,dark_grey,settings)
 
         pygame.display.update()
         clock.tick(15)
@@ -221,8 +239,6 @@ def modes():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-
-        #gameDisplay.fill(white)
 
         #button(msg,x,y,w,h,ic,ac,action=None)
         button("Normal",150,450,100,50,green,bright_green,game_loop)
@@ -290,18 +306,20 @@ def settings():
         button("Back",150,450,100,50,green,bright_green,game_intro)
         button("QUIT",550,450,100,50,red,bright_red,quitgame)
 
+        message_display("Music settings",400,270)
+
         pygame.display.update()
         clock.tick(15)
 
-def mute():
-    global is_muted
-    pygame.mixer.music.load("msc_snds/Drag_race.wav")
-    is_muted = True
-
 def unmute():
     global is_muted
-    pygame.mixer.music.load("msc_snds/silence.wav")
+    pygame.mixer.music.load("msc_snds/Drag_race.wav")
     is_muted = False
+
+def mute():
+    global is_muted
+    pygame.mixer.music.load("msc_snds/silence.wav")
+    is_muted = True
         
 def crash(car_id, play_mode):
     pygame.mixer.music.stop()
@@ -400,17 +418,29 @@ def music():
         clock.tick(15)
     
 def play_Drag():
-    pygame.mixer.music.load("msc_snds/Drag_Race.wav")
-    print("Drag is chosen")
+    global is_muted
+    if is_muted == False:
+        pygame.mixer.music.load("msc_snds/Drag_Race.wav")
+        print("Drag is chosen")
+    else:
+        print("You disabled music in settings(#)")
     
 def play_Jazz():
-    pygame.mixer.music.load("msc_snds/Jazz_in_Paris.wav")
-    print("Jazz is chosen")
+    global is_muted
+    if is_muted == False:
+        pygame.mixer.music.load("msc_snds/Jazz_in_Paris.wav")
+        print("Jazz is chosen")
+    else:
+        print("You disabled music in settings(#)")
 
 def play_Country():
-    pygame.mixer.music.load("msc_snds/Cherokee_Shuffle.wav")
-    print("Country is chosen")
-
+    global is_muted
+    if is_muted == False:
+        pygame.mixer.music.load("msc_snds/Cherokee_Shuffle.wav")
+        print("Country is chosen")
+    else:
+        print("You disabled music in settings(#)")
+        
 
 def shop():
     shop = True
@@ -696,7 +726,7 @@ def game_loop():
     global s_nerf
     global nerf
     global speed
-    
+
     pygame.mixer.music.play(-1)
     
     x = (display_width * 0.45)
@@ -706,7 +736,7 @@ def game_loop():
 
     thing_startx = random.randrange(0, display_width)
     thing_starty = -600
-    thing_speed = 7
+    thing_speed = 10
     thing_width = 100
     thing_height = 100
 
@@ -749,7 +779,7 @@ def game_loop():
         
         x += x_change   
 
-        gameDisplay.fill(white)
+         #gameDisplay.fill(white)
         gameDisplay.blit(bg_img, (0, 0))
 
         things(thing_startx, thing_starty, thing_width, thing_height, block_color)
@@ -777,7 +807,7 @@ def game_loop():
             coins += 1
             db.update_coins(1, coins)
             
-            if thing_speed < 17:
+            if thing_speed < 20:
                 thing_speed += 1
                 if nerf == True:
                     thing_speed *= s_nerf
